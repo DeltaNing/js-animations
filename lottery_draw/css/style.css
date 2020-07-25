@@ -1,0 +1,347 @@
+@charset "utf-8";
+body,
+div,
+p,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+input,
+select,
+button,
+textarea,
+table,
+th,
+td,
+a,
+span,
+canvas {
+  margin: 0;
+  padding: 0;
+  background: no-repeat center / contain;
+  cursor: default;
+}
+a {
+    text-decoration: none
+}
+input {
+    outline: none
+}
+/* container */
+.wrap-container {
+    /* width: 100%; */
+    padding: 0 0.3rem;
+    height: 17.8rem;
+    background-image: url(../images/bg.png);
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    overflow: hidden;
+}
+/* header */
+.header {
+    padding: 0.3rem 0.49333333rem 0rem 0.49333333rem;
+}
+.header .title-img {
+    width: 8.52rem;
+    height: 4.21333333rem;
+    margin: auto;
+    background-image: url(../images/title.png);
+}
+
+/* 转盘面板 */
+.lottery {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.lottery img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -55px;
+    width: 100px;
+    height: 110px;
+    cursor: pointer;
+    background: transparent;
+    outline: none
+}
+.item {
+    width: 100% /* canvas自适应屏幕, 同时父组件的width也要100% */
+}
+/* 剩余次数 */
+.border {
+    width: 5.06666667rem;
+    height: 0.84rem;
+    margin: 0rem auto 0.33333333rem;
+    background: #fb3a13;
+    font-size: 0.32rem;
+    line-height: 0.84rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 0.6rem;
+}
+/* 活动规则 */
+/*规则弹窗*/
+#maskRule {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+#maskRule .box-rule {
+  position: relative;
+  margin: 30% auto;
+  padding-top: 0.53333333rem;
+  width: 90%;
+  height: 9rem;
+  border-radius: 0.26666667rem;
+  background-color: #f58d40;
+}
+#maskRule .box-rule .star {
+  position: absolute;
+  left: 50%;
+  top: -1.33333333rem;
+  margin-left: -1.73333333rem;
+  width: 3.45333333rem;
+  height: 1.16rem;
+}
+#maskRule .box-rule h2 {
+  width: 100%;
+  text-align: center;
+  line-height: 0.45333333rem;
+  font-size: 0.45333333rem;
+  font-weight: normal;
+  color: #fff;
+}
+
+#maskRule #close-rule {
+  position: absolute;
+  right: 0.95333333rem;
+  top: 0.50666667rem;
+  width: 0.53333333rem;
+  height: 0.53333333rem;
+  background-image: url("../images/close.png");
+}
+/*内容盒子*/
+#maskRule .con {
+    overflow: auto;
+    position: relative;
+    margin: 0.53333333rem auto;
+    padding-right: 0.2rem;
+    width: 7.73333333rem;
+    height: 82%;
+    line-height: 0.64rem;
+    font-size: 0.34666667rem;
+    color: #fff;
+  }
+  #maskRule .con .text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: auto;
+    text-align: justify
+  }
+/*中奖提示*/
+#mask2, #mask{
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+  #mask .winning,#mask2 .winning {
+    position: absolute;
+    left: 5%;
+    top: 25%;
+    z-index: 1;
+    width: 9rem;
+    height: 8rem;
+    background:url(../images/bg2.png) no-repeat;
+    background-size:100% 100%;
+    -webkit-background-size:100% 100%;
+  }
+  #mask2 .winning {  
+      background:url(../images/bg3.png) no-repeat;
+    background-size:100% 100%;
+     -webkit-background-size:100% 100%;}
+  #mask .reback,#mask2 .reback{
+    -o-animation: reback .5s linear forwards;
+    -ms-animation: reback .5s linear forwards;
+    -moz-animation: reback .5s linear forwards;
+    -webkit-animation: reback .5s linear forwards;
+    animation: reback .5s linear forwards;
+  }
+  @keyframes reback {
+    100% {
+      -o-transform: scale(1);
+      -ms-transform: scale(1);
+      -moz-transform: scale(1);
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+  
+  .winning p{ 
+      position: absolute;
+    left: 50%;
+     top: 30%;
+    width:80%;
+    margin-left:-40%;
+    color:#FFF;
+    font-size:0.7rem;
+    text-align:center;
+    }
+  .winning p b{ 
+      font-size:0.6rem;
+    }
+  .winning .btn {
+    position: absolute;
+    left: 50%;
+    bottom: 15%;
+    z-index: 2;
+    width: 4.85333333rem;
+    height: 0.94666667rem;
+    line-height: 0.94666667rem;
+    margin-left: -2.42666667rem;
+    background-color: #ffee8d;
+    border-radius: 0.6rem;
+    border: none;
+    -webkit-border-radius: 0.6rem;
+    color: #f62a39;
+    text-align: center;
+    font-size: 0.6rem;
+    
+  }
+  @keyframes shake {
+    50% {
+      -o-transform: rotate(-5deg);
+      -ms-transform: rotate(-5deg);
+      -moz-transform: rotate(-5deg);
+      -webkit-transform: rotate(-5deg);
+      transform: rotate(-5deg);
+    }
+    100% {
+      -o-transform: rotate(5deg);
+      -ms-transform: rotate(5deg);
+      -moz-transform: rotate(5deg);
+      -webkit-transform: rotate(5deg);
+      transform: rotate(5deg);
+    }
+  }
+  #close {
+    opacity: 0;
+    position: absolute;
+    right: 0rem;
+    top: -1.06666667rem;
+    z-index: 10;
+    width: 0.85333333rem;
+    height: 0.85333333rem;
+    background-image: url("../image/close.png");
+    -o-animation: fadein .5s .5s linear forwards;
+    -ms-animation: fadein .5s .5s linear forwards;
+    -moz-animation: fadein .5s .5s linear forwards;
+    -webkit-animation: fadein .5s .5s linear forwards;
+    animation: fadein .5s .5s linear forwards;
+  }
+  @keyframes fadein {
+    100% {
+      opacity: 1;
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  .winning .tips {
+      position: absolute;
+      top: 60%;
+      font-size: 0.5rem;
+      color: #f62a39
+  }
+/* 注册 */
+.login-panel {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+  .form-container {
+    position: absolute;
+    left: 5%;
+    top: 25%;
+    z-index: 1;
+    width: 8rem;
+    height: 7rem;
+    background: #f58d40;
+    border-radius: 0.5rem;
+    padding: 0.5rem
+    /* background:url(../images/bg2.png) no-repeat; */
+    /* background-size:100% 100%;
+    -webkit-background-size:100% 100%; */
+  }
+  .form-container input {
+      display: block;
+      width: 80%;
+      height: 1rem;
+      margin: 0.5rem auto;
+      padding: 0 5%;
+      font-size: 0.6rem;
+      border: 1px solid darkblue;
+      border-radius: 0.2rem
+  }
+  input::placeholder {
+      font-size: 0.5rem;
+      /* margin-left: 0.1rem */
+  }
+  input:focus {
+      border: 1px solid gold
+  }
+  .form-container .submitBtn {
+    border: none;
+    background: lightblue;
+    margin-top: 2rem;
+    width: 90%;
+    height: 1.2rem
+  }
+
+  /* 规则和分享按钮 */
+  .button-panel {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 0.5rem;
+  }
+  .button-panel input {
+      width: 45%;
+      height: 1rem;
+      border-radius: 0.2rem;
+      border: none;
+      background: #fff;
+      font-size: 0.55rem;
+      /* color: #f62a39 */
+  }
+

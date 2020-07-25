@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/turntable.js"></script>
+    <title>抽奖</title>
+    <!--[if lte IE 8]>
+        <style>
+            .lottery img{
+                display: none;
+            }   
+        </style>
+    <![endif]-->
+    <!-- 移动端适配 -->
+    <script>
+        var html = document.querySelector('html');
+        changeRem();
+        window.addEventListener('resize', changeRem);
+
+        function changeRem() {
+            var width = html.getBoundingClientRect().width;
+            html.style.fontSize = width / 10 + 'px';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrap-container">
+        <div class="header">
+            <div class="title-img"></div>
+        </div>
+        <div class="lottery">
+            <canvas id="myCanvas" width="600" height="600" class="item">
+                当前浏览器版本过低，请使用其他浏览器尝试
+            </canvas>
+            <img class="pointer" src="./images/start.png" id="start">
+        </div>
+        <div class="border">
+                您今日还有 <span id="change">3</span> 次抽奖机会
+            </div>
+        <div class="button-panel">
+            <input class="ruleBtn" type="button" value="游戏规则">
+            <input class="shareBtn" type="button" value="召唤好友">
+        </div>
+        <div id="maskRule">
+            <div class="box-rule">
+                <h2>活动规则说明</h2>
+                <span id="close-rule"></span>
+                <div class="con">
+                    <div class="text">
+                        <p>1.每天送3次免费机会，随后分享一次即可抽奖一次，最多可抽5次！<br>
+                            2.中将网友请在24小时内登录独角秀APP领取奖励，逾期或领奖时信息填写错误或不完整均视为放弃获奖资格，限中奖者本人领奖。
+                            作弊用户直接取消获奖资格，我们保留追究其责任的权利<br>
+                            3.实物奖品将在每个自然月的月底统一寄出，请中奖网友耐心等候。<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--中奖提示-->
+        <div id="mask">
+            <div class="winning">
+                <p><b>恭喜您</b><br/>抽中了<span id="text1"></span></p>
+                <input class="btn" value="确定" />
+                <p class="tips">请前往独角秀APP领取奖励！</p>
+            </div>
+        </div>
+        <!--中奖提示-->
+        <div id="mask2">
+            <div class="winning">
+                <p><br/><b>谢谢参与</b></p>
+                <a href="#" target="_self" class="btn">确定</a>
+                
+            </div>
+        </div>
+        <!-- 登录页面 or 注册页面 -->
+        <div class="login-panel">
+            <form action="" class="form-container">
+                <input type="text" name="name" placeholder="请输入手机号">
+                <input type="password" name="password" placeholder="请输入密码" >
+                <input type="button" value="提交" class="submitBtn">
+            </form>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        var wheelSurf,
+            isLogin = false, // 默认没有注册，点击抽奖时，提示填写手机号
+            times = 3; // 初始赠送3次，正常情况下应该后台返回
+        // 初始化装盘数据 正常情况下应该由后台返回
+        var initData = {
+            "success": true,
+            "list": [{
+                    "id": 100,
+                    "name": "5000元京东卡",
+                    "image": "./images/1.png",
+                    "rank":1,
+                    "percent":3
+                },
+                {
+                    "id": 101,
+                    "name": "1000元京东卡",
+                    "image": "./images/2.png",
+                    "rank":2,
+                    "percent":5
+                },
+                {
+                    "id": 102,
+                    "name": "100个比特币",
+                    "image": "./images/3.png",
+                    "rank":3,
+                    "percent":2
+                },
+                {
+                    "id": 103,
+                    "name": "50元话费",
+                    "image": "./images/4.png",
+                    "rank":4,
+                    "percent":49
+                },
+                {
+                    "id": 104,
+                    "name": "100元话费",
+                    "image": "./images/5.png",
+                    "rank":5,
+                    "percent":30
+                },
+                {
+                    "id": 105,
+                    "name": "500个比特币",
+                    "image": "./images/6.png",
+                    "rank":6,
+                    "percent":1
+                },
+                {
+                    "id": 106,
+                    "name": "500元京东卡",
+                    "image": "./images/7.png",
+                    "rank":7,
+                    "percent":8
+                },
+                {
+                    "id": 107,
+                    "name": "50000元京东卡",
+                    "image": "./images/7.png",
+                    "rank":8,
+                    "percent":2
+                }
+            ]
+        }
+
+        // 计算分配获奖概率(前提所有奖品概率相加100%)
+        function getGift(){
+            var percent = Math.random()*100
+            var totalPercent = 0
+            for(var i = 0 ,l = initData.list.length;i<l;i++){
+                totalPercent += initData.list[i].percent
+                if(percent<=totalPercent){
+                    return initData.list[i]
+                }
+            }           
+        }
+
+        var list = {}
+        
+        var angel = 360 / initData.list.length
+        // 格式化成插件需要的奖品列表格式
+        for (var i = 0, l = initData.list.length; i < l; i++) {
+            list[initData.list[i].rank] = {
+                id:initData.list[i].id,
+                name: initData.list[i].name,
+                image: initData.list[i].image
+            }
+        }
+        // 查看奖品列表格式
+        
+        // 定义转盘奖品
+        wheelSurf = $('#myCanvas').WheelSurf({
+            list: list, // 奖品 列表，(必填)
+            outerCircle: {
+                color: '#df1e15' // 外圈颜色(可选)
+            },
+            innerCircle: {
+                color: '#f4ad26' // 里圈颜色(可选)
+            },
+            dots: {color: ['#fbf0a9', '#fbb936', '#f0f'],
+                    count: 20 }, // 装饰点颜色(可选)和数量
+            disk: ['#ffb933', '#ffe8b5', '#ffb933', '#ffd57c', '#ffb933', '#ffe8b5', '#ffd57c', '#ff0033'], //中心奖盘的颜色，默认7彩(可选)
+            title: {
+                color: '#5c1e08',
+                font: '24px Arial'
+            } // 奖品标题样式(可选)
+        })
+
+        // 初始化转盘
+        wheelSurf.init()
+
+        // 注册或登录的提交事件
+        $('.submitBtn').click(function () {
+            var name = $("input[name='name']").val(),
+            password = $("input[name='password']").val();
+            console.log(name, password)
+            isLogin = true;
+            $('.login-panel').fadeOut();
+        })
+        // 抽奖
+        var throttle = true;
+        $("#start").on('click', function () {
+            if(!isLogin) {
+                $('.login-panel').fadeIn();
+                return false;
+            }
+            if (times <= 0 || times > 5) { //当抽奖次数为0时
+                $('#change').html(0);//次数显示为0
+                throttle = false;
+                alert("没有次数了");
+                return false;
+            }
+            // 还有抽奖次数
+            times--;
+            times <= 0 && (times = 0);
+            $('#change').html(times);//显示剩余次数
+
+            var winData = getGift() // 正常情况下获奖信息应该由后台返回
+
+            $("#text1").html('')
+            if(!throttle){
+                return false;
+            }
+            throttle = false;
+            var count = 0
+            // 计算奖品角度
+
+            for (const key in list) {
+                if (list.hasOwnProperty(key)) {               
+                    if (winData.id == list[key].id) {
+                        break;
+                    }
+                    count++    
+                }
+            }
+      
+            // 转盘抽奖，
+            wheelSurf.lottery((count * angel + angel / 2), function () {
+                $("#text1").html(winData.name)
+                $('#mask').fadeIn();
+                throttle = true;
+            })
+        })
+
+        
+    </script>
+</body>
+
+</html>
